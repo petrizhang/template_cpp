@@ -3,7 +3,11 @@ project(TemplateCpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp exercises/test.hpp exercises/test.hpp exercises/chapter2/chapter2.hpp exercises/chapter2/2-0.hpp exercises/chapter2/2-1.hpp)
+set(SOURCE_FILES main.cpp
+        exercises/test.hpp
+        exercises/chapter2/chapter2.hpp
+        exercises/chapter2/2-0.hpp
+        exercises/chapter2/2-1.hpp)
 
 add_executable(TemplateCpp ${SOURCE_FILES})
 
