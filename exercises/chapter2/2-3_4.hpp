@@ -15,7 +15,7 @@
 // std::cout<<type_descriptor<int>                              -> int
 // std::cout<<type_descriptor<int *>                            -> int*
 // std::cout<<type_descriptor<int [6]>                          -> int[6]
-// std::cout<<type_descriptor<iint const volatile ***[6][6]>    -> int const volatile***[6][6]
+// std::cout<<type_descriptor<int const volatile ***[6][6]>    -> int const volatile***[6][6]
 //
 // This template works well with several types:
 // short, int, long ,long long and all unsigned type of them
