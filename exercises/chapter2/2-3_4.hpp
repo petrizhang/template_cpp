@@ -30,7 +30,7 @@
 // };
 // \endcode
 //
-// Note: Currently, type_descriptor can't apply for function type.
+// Note: Currently, type_descriptor doesn't support function type.
 //===----------------------------------------------------------------------===//
 
 #ifndef TEMPLATECPP_2_3_4_HPP
