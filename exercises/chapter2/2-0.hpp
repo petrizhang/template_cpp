@@ -7,9 +7,10 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file defines a template.
-// If the template parameter T is reference type, it returns T itself,
-// else it returns type T const &.
+// This file defines a template 'add_const_ref'.
+// It takes 1 parameter T.
+// If T is a reference type, it returns T itself,
+// else it returns T const &.
 //
 //===----------------------------------------------------------------------===//
 
@@ -27,7 +28,7 @@ struct add_const_ref {
 };
 
 
-/// template specifection for reference type
+/// template specialization for reference type
 /// T & -> T &
 template<class T>
 struct add_const_ref<T&> {
@@ -39,22 +40,18 @@ TEST(chapter2, 2_0) {
     // call with type should get type const &
     //===--------------------------------------------------------------------===//
 
-    EXPECT_EQ((boost::is_same<int const &, typename add_const_ref<int>::type >::value),
-              true);
-    EXPECT_EQ((boost::is_same<int, typename add_const_ref<int>::type >::value),
-              false);
+    EXPECT_TRUE((boost::is_same<int const &, typename add_const_ref<int>::type >::value));
+    EXPECT_FALSE((boost::is_same<int, typename add_const_ref<int>::type >::value));
 
     //===--------------------------------------------------------------------===//
     // call with type & should get type &
     //===--------------------------------------------------------------------===//
-    EXPECT_EQ((boost::is_same<int &, typename add_const_ref<int&>::type >::value),
-              true);
+    EXPECT_TRUE((boost::is_same<int &, typename add_const_ref<int&>::type >::value));
 
     //===--------------------------------------------------------------------===//
     // call with type const & should get type const &
     //===--------------------------------------------------------------------===//
-    EXPECT_EQ((boost::is_same<int const&, typename add_const_ref<int const&>::type >::value),
-              true);
+    EXPECT_TRUE((boost::is_same<int const&, typename add_const_ref<int const&>::type >::value));
 }
 
 #endif //TEMPLATECPP_2_0_HPP

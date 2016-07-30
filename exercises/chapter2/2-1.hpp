@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 //
 // This file defines a template 'replace_type'.
-// The template has 3 type parameters <class C,class X,class Y>
+// The template takes 3 type parameters <class C,class X,class Y>
 // and it replaces all type X in compound type C with type Y.
 //
 //===----------------------------------------------------------------------===//
@@ -62,6 +62,36 @@ struct replace_type<X[N], X, Y> {
     typedef Y type[N];
 };
 
+//===--------------------------------------------------------------------===//
+// Template specialization for function types( these take 2 arguments at most)
+//===--------------------------------------------------------------------===//
+
+/// Deal with R()
+/// which reprsents a function takes no arguments
+template<class R, class X, class Y>
+struct replace_type<R(), X, Y> {
+    typedef typename replace_type<R, X, Y>::type          /// deal with return type recursively
+            type();
+};
+
+/// Deal with R(A)
+/// which reprsents a function takes 1 argument
+template<class R, class A, class X, class Y>
+struct replace_type<R(A), X, Y> {
+    typedef typename replace_type<R, X, Y>::type          /// deal with return type 'R' recursively
+            type(typename replace_type<A, X, Y>::type);   /// deal with argument type 'A' recursively
+};
+
+/// Deal with R(A,B)
+/// which reprsents a function takes 2 arguments
+template<class R, class A, class B, class X, class Y>
+struct replace_type<R(A, B), X, Y> {
+    typedef typename replace_type<R, X, Y>::type          /// deal with return type 'R' recursively
+            type(
+                 typename replace_type<A, X, Y>::type,    /// deal with argument type 'A' recursively
+                 typename replace_type<B, X, Y>::type     /// deal with argument type 'A' recursively
+            );
+};
 
 TEST(chapter2, 2_1) {
     //===--------------------------------------------------------------------===//
@@ -95,13 +125,22 @@ TEST(chapter2, 2_1) {
             typename replace_type<long const[1][2][3][4][5][6], long const, int>::type>::value));
 
     //===--------------------------------------------------------------------===//
-    // Test for replacement for compound type
+    // Test for function type
+    //===--------------------------------------------------------------------===//
+    EXPECT_TRUE((boost::is_same<int (int),
+            typename replace_type<long (long), long, int>::type>::value));
+    EXPECT_TRUE((boost::is_same<int (int, int),
+            typename replace_type<long (long, long), long, int>::type>::value));
+
+    //===--------------------------------------------------------------------===//
+    // Test for compound type
     //===--------------------------------------------------------------------===//
     EXPECT_TRUE((boost::is_same<int **[6][6],
             typename replace_type<long **[6][6], long, int>::type>::value));
     EXPECT_TRUE((boost::is_same<int **&,
             typename replace_type<long **&, long, int>::type>::value));
-
+    EXPECT_TRUE((boost::is_same<int **(int **&),
+            typename replace_type<long **(long **&), long, int>::type>::value));
 }
 
 #endif //TEMPLATECPP_2_1_HPP

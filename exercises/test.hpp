@@ -1,4 +1,4 @@
-//===---- test.hpp - Collection of header files consists test case---*- C++ -*-===//
+//===---- test.hpp - Collection of header files for chapters ---*- C++ -*-===//
 //
 //              Created by zeta on 16-7-29.
 //

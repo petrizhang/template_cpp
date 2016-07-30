@@ -1,4 +1,4 @@
-//===---- chapter2.hpp - Interface to run test cases of chapter2---*- C++ -*-===//
+//===---- chapter2.hpp - Collection of header files for chapter2---*- C++ -*-===//
 //
 //              Created by zeta on 16-7-29.
 //
