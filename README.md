@@ -1,2 +1,2 @@
 # TemplateCPP
-Trivial practice for c++ template meta-programming
+Trivial practice of c++ template meta-programming
