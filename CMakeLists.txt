@@ -8,7 +8,7 @@ set(SOURCE_FILES
         exercises/test.hpp
         exercises/chapter2/chapter2.hpp
         exercises/chapter2/2-0.hpp
-        exercises/chapter2/2-1.hpp)
+        exercises/chapter2/2-1.hpp exercises/chapter2/2-2.hpp)
 
 add_executable(TemplateCpp ${SOURCE_FILES})
 

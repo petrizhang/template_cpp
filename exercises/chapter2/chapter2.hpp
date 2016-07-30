@@ -16,4 +16,5 @@
 #include <gtest/gtest.h>
 #include "2-0.hpp"
 #include "2-1.hpp"
+#include "2-2.hpp"
 #endif //TEMPLATECPP_CHAPTER2_HPP
