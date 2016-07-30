@@ -141,6 +141,7 @@ TEST(chapter2, 2_1) {
             typename replace_type<long **&, long, int>::type>::value));
     EXPECT_TRUE((boost::is_same<int **(int **&),
             typename replace_type<long **(long **&), long, int>::type>::value));
+
 }
 
 #endif //TEMPLATECPP_2_1_HPP
