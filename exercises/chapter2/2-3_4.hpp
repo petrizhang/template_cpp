@@ -15,20 +15,27 @@
 // std::cout<<type_descriptor<int>                              -> int
 // std::cout<<type_descriptor<int *>                            -> int*
 // std::cout<<type_descriptor<int [6]>                          -> int[6]
-// std::cout<<type_descriptor<int const volatile ***[6][6]>    -> int const volatile***[6][6]
+// std::cout<<type_descriptor<int const volatile ***[6][6]>     -> int const volatile***[6][6]
 //
 // This template works well with several types:
 // short, int, long ,long long and all unsigned type of them
 // and bool, char, float, double.
 // If you want to makes it work for your class or type,
-// you need to implement the 'typename_trait' template.
+// you need to add a public static const char * member 'type_name' to your class
+// or implement the 'typename_trait' template.
 // e.g.
-// \code
+// YourClass {
+// public:
+// static constexpr const char* type_name = "YourClass's name";
+// }
+//
+// or
+//
 // template<>
 // struct typename_trait<YourType>{
 //     static constexpr const char *type_name = "YourType's name";
 // };
-// \endcode
+//
 //
 // Note: Currently, type_descriptor doesn't support function type.
 //===----------------------------------------------------------------------===//
@@ -41,7 +48,7 @@
 
 template<class T>
 struct typename_trait {
-    static constexpr const char *type_name = "<unrecognized type>";
+    static constexpr const char *type_name = T::type_name;
 };
 
 template<>
@@ -210,12 +217,10 @@ struct type_descriptor<T volatile[]> {
 
 
 class UserClass {
-};
-
-template<>
-struct typename_trait<UserClass> {
+public:
     static constexpr const char *type_name = "UserClass";
 };
+
 
 TEST(chapter2, 2_3_4) {
     std::ostringstream oss;
