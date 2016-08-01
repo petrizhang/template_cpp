@@ -189,7 +189,7 @@ struct type_descriptor<T[N]> {
 template<class T, unsigned N>
 struct type_descriptor<T const[N]> {
     friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
-        os << type_descriptor<T const>() << "[" << N << "]";
+        os << type_descriptor<T>() << " const[" << N << "]";
         return os;
     }
 };
@@ -197,7 +197,15 @@ struct type_descriptor<T const[N]> {
 template<class T, unsigned N>
 struct type_descriptor<T volatile[N]> {
     friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
-        os << type_descriptor<T volatile>() << "[" << N << "]";
+        os << type_descriptor<T >() << " volatile[" << N << "]";
+        return os;
+    }
+};
+
+template<class T, unsigned N>
+struct type_descriptor<T const volatile[N]> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<T>() << " const volatile[" << N << "]";
         return os;
     }
 };
@@ -213,7 +221,7 @@ struct type_descriptor<T[]> {
 template<class T>
 struct type_descriptor<T const[]> {
     friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
-        os << type_descriptor<T const>() << "[]";
+        os << type_descriptor<T>() << " const[]";
         return os;
     }
 };
@@ -221,11 +229,18 @@ struct type_descriptor<T const[]> {
 template<class T>
 struct type_descriptor<T volatile[]> {
     friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
-        os << type_descriptor<T volatile>() << "[]";
+        os << type_descriptor<T>() << " volaitile[]";
         return os;
     }
 };
 
+template<class T>
+struct type_descriptor<T const volatile[]> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<T>() << " const volatile[]";
+        return os;
+    }
+};
 ///  Template specializition for function type
 
 /// Function with fixed-length parameters,
@@ -281,7 +296,6 @@ struct type_descriptor<Res(ArgTypes...) const &&> {
         return os;
     }
 };
-
 
 
 template<class Res, class... ArgTypes>
@@ -384,7 +398,6 @@ struct type_descriptor<Res(ArgTypes......) const &&> {
     }
 };
 
-
 template<class Res, class... ArgTypes>
 struct type_descriptor<Res(ArgTypes......) volatile> {
     friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
@@ -408,8 +421,6 @@ struct type_descriptor<Res(ArgTypes......) volatile &&> {
         return os;
     }
 };
-
-
 
 template<class Res, class... ArgTypes>
 struct type_descriptor<Res(ArgTypes......) const volatile> {
@@ -439,6 +450,7 @@ struct type_descriptor<Res(ArgTypes......) const volatile &&> {
 /// no-scence class used in test cases
 class UserClass {
 };
+
 /// implementation for UserClass's typename trait
 template<>
 struct typename_trait<UserClass> {
@@ -489,7 +501,7 @@ TEST(chapter2, 2_3_4) {
     /// int const volatile***[6][6]
     oss.str("");
     oss.clear();
-    oss << type_descriptor<int const volatile ***[6][6]>();
+    oss << type_descriptor<int volatile const ***[6][6]>();
     EXPECT_STREQ("int const volatile***[6][6]", oss.str().c_str());
 
     //===--------------------------------------------------------------------===//
@@ -507,6 +519,7 @@ TEST(chapter2, 2_3_4) {
     typedef int p(int(int *), double, float...);
     oss << type_descriptor<p>();
     EXPECT_STREQ("int(int(int*)*, double, float, ...)", oss.str().c_str());
+
 }
 
 #endif //TEMPLATECPP_2_3_4_HPP
