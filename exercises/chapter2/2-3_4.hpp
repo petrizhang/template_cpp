@@ -21,7 +21,7 @@
 // short, int, long ,long long and all unsigned type of them
 // and bool, char, float, double.
 // If you want to makes it work for your class or type,
-// you need implement the 'typename_trait' template.
+// you need to implement the 'typename_trait' template.
 // e.g.
 // template<>
 // struct typename_trait<YourType>{
@@ -29,7 +29,6 @@
 // };
 //
 //
-// Note: Currently, type_descriptor doesn't support function type.
 //===----------------------------------------------------------------------===//
 
 #ifndef TEMPLATECPP_2_3_4_HPP
