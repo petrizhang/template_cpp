@@ -28,7 +28,6 @@
 //     static constexpr const char *type_name = "YourType's name";
 // };
 //
-//
 //===----------------------------------------------------------------------===//
 
 #ifndef TEMPLATECPP_2_3_4_HPP
