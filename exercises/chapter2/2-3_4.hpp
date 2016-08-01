@@ -21,16 +21,8 @@
 // short, int, long ,long long and all unsigned type of them
 // and bool, char, float, double.
 // If you want to makes it work for your class or type,
-// you need to add a public static const char * member 'type_name' to your class
-// or implement the 'typename_trait' template.
+// you need implement the 'typename_trait' template.
 // e.g.
-// YourClass {
-// public:
-// static constexpr const char* type_name = "YourClass's name";
-// }
-//
-// or
-//
 // template<>
 // struct typename_trait<YourType>{
 //     static constexpr const char *type_name = "YourType's name";
@@ -45,10 +37,11 @@
 
 #include <iostream>
 #include <sstream>
+#include <typeinfo>
 
 template<class T>
 struct typename_trait {
-    static constexpr const char *type_name = T::type_name;
+    static constexpr const char *type_name = "<unrecognized type>";
 };
 
 template<>
@@ -111,8 +104,21 @@ struct typename_trait<double> {
     static constexpr const char *type_name = "double";
 };
 
-template<class T>
+/// Main template
+template<class ... Types>
 struct type_descriptor {
+};
+
+template<class T, class ... Remain>
+struct type_descriptor<T, Remain...> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<T>() << ", " << type_descriptor<Remain...>();
+        return os;
+    }
+};
+
+template<class T>
+struct type_descriptor<T> {
     friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
         os << typename_trait<T>::type_name;
         return os;
@@ -160,6 +166,15 @@ template<class T>
 struct type_descriptor<T &> {
     friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
         os << type_descriptor<T>() << "&";
+        return os;
+    }
+};
+
+/// Template specializition for rvalue reference type
+template<class T>
+struct type_descriptor<T &&> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<T>() << "&&";
         return os;
     }
 };
@@ -213,14 +228,224 @@ struct type_descriptor<T volatile[]> {
     }
 };
 
-/// TODO: Template specializition for function type
+///  Template specializition for function type
 
-
-class UserClass {
-public:
-    static constexpr const char *type_name = "UserClass";
+/// Function with fixed-length parameters,
+/// such as F(T), F(T1, T2)
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...)> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ')';
+        return os;
+    }
 };
 
+//===--------------------------------------------------------------------===//
+// Function with fixed-length parameters such as F(T), F(T1, T2) ...
+//===--------------------------------------------------------------------===//
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) &> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") &";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) &&> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") &&";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) const> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") const";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) const &> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") const &";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) const &&> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") const &&";
+        return os;
+    }
+};
+
+
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) volatile> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") volatile";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) volatile &> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") volatile &";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) volatile &&> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") volatile &&";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) const volatile> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") const volatile";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) const volatile &> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") const volatile &";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes...) const volatile &&> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ") const volatile &&";
+        return os;
+    }
+};
+
+//===--------------------------------------------------------------------===//
+// Function with variable-length parameters such as F(T...), F(T1, T2...),
+//===--------------------------------------------------------------------===//
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......)> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...)";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) &> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) &";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) &&> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) &&";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) const> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) const";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) const &> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) const &";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) const &&> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) const &&";
+        return os;
+    }
+};
+
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) volatile> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) volatile";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) volatile &> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) volatile";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) volatile &&> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) volatile &&";
+        return os;
+    }
+};
+
+
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) const volatile> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) const volatile";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) const volatile &> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) const volatile &";
+        return os;
+    }
+};
+
+template<class Res, class... ArgTypes>
+struct type_descriptor<Res(ArgTypes......) const volatile &&> {
+    friend std::ostream &operator<<(std::ostream &os, const type_descriptor &a) {
+        os << type_descriptor<Res>() << '(' << type_descriptor<ArgTypes...>() << ", ...) const volatile &&";
+        return os;
+    }
+};
+
+
+/// no-scence class used in test cases
+class UserClass {
+};
+/// implementation for UserClass's typename trait
+template<>
+struct typename_trait<UserClass> {
+    static constexpr const char *type_name = "UserClass";
+};
 
 TEST(chapter2, 2_3_4) {
     std::ostringstream oss;
@@ -229,7 +454,7 @@ TEST(chapter2, 2_3_4) {
     oss << type_descriptor<int>();
     EXPECT_STREQ("int", oss.str().c_str());
 
-    /// user-defined type that has a 'TypeName' attrivute
+    /// user-defined type that has a 'class' attrivute
     /// UserClass
     oss.str("");
     oss.clear();
@@ -247,6 +472,12 @@ TEST(chapter2, 2_3_4) {
     oss.clear();
     oss << type_descriptor<int &>();
     EXPECT_STREQ("int&", oss.str().c_str());
+
+    /// int&&
+    oss.str("");
+    oss.clear();
+    oss << type_descriptor<int &&>();
+    EXPECT_STREQ("int&&", oss.str().c_str());
 
     //===--------------------------------------------------------------------===//
     // test cases for array type
@@ -266,8 +497,18 @@ TEST(chapter2, 2_3_4) {
     //===--------------------------------------------------------------------===//
     // test cases for function type
     //===--------------------------------------------------------------------===//
-    /// TODO
 
+    // int(float, double) const &&
+    oss.str("");
+    oss.clear();
+    oss << type_descriptor<int(float, double) const &&>();
+    EXPECT_STREQ("int(float, double) const &&", oss.str().c_str());
+    // int(int(int*)*, double, float, ...)
+    oss.str("");
+    oss.clear();
+    typedef int p(int(int *), double, float...);
+    oss << type_descriptor<p>();
+    EXPECT_STREQ("int(int(int*)*, double, float, ...)", oss.str().c_str());
 }
 
 #endif //TEMPLATECPP_2_3_4_HPP

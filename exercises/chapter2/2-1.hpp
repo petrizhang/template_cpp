@@ -11,6 +11,10 @@
 // The template takes 3 type parameters <class C,class X,class Y>
 // and it replaces all type X in compound type C with type Y.
 //
+// Notes:
+// - for function type, template parameter C only support these whose takes <= 2 arguments.
+// - template parameter X does'nt support compound type
+//
 //===----------------------------------------------------------------------===//
 
 #ifndef TEMPLATECPP_2_1_HPP
