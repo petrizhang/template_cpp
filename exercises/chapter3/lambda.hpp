@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file demonstrate the lambda concept in c++ template meta-programming.
+// This file demonstrates the lambda concept in c++ template meta-programming.
 // Don't ask me the details...
 // I also can't understand what I've written...
 //
