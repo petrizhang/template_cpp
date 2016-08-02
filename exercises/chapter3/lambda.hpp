@@ -76,7 +76,7 @@ struct GetArg<Arg<N> > : Arg<N> {
 };
 
 //===--------------------------------------------------------------------===//
-// Template 'lambda' which deals with templates that take at most 2 arguments.
+// Template 'lambda' which could deal with templates that take at most 2 arguments.
 //===--------------------------------------------------------------------===//
 
 /// Lambda deals with a meta-function ( wrapper for a raw template),
@@ -87,7 +87,7 @@ struct lambda : F {
 };
 
 /// Lambda deals with raw template that takes 1 argument,
-// such as add_pointer defined below.
+/// such as add_pointer defined below.
 template<template<class> class F, class X>
 struct lambda<F<X> > {
     template<class A = void_>
@@ -113,7 +113,7 @@ struct lambda<F<X, Y> > {
 };
 
 //===--------------------------------------------------------------------===//
-// Usage of template lambda
+// Basic usages of lambda
 //===--------------------------------------------------------------------===//
 
 /// Template adds * to type T(T -> T*).
@@ -163,9 +163,9 @@ struct twice2 : apply1<
 };
 
 /// Option3: use 'lambda' to define twice.
-/// We can do that because lambda works well with both
-/// meta-functions use a wrapper( e.g. add_pointer_f )
-/// or these use a placeholder( e.g. add_pointer<_1> ).
+/// We can do that because lambda could work with both
+/// a meta-function used as a wrapper( e.g. add_pointer_f )
+/// or that producted by a placeholder( e.g. add_pointer<_1> ).
 template<class F, class X>
 struct twice3 : apply1<
         typename lambda<F>::type,
@@ -178,10 +178,10 @@ struct twice3 : apply1<
 
 
 //===--------------------------------------------------------------------===//
-// More usages of 'lambda'
+// Advanced usages of lambda
 //===--------------------------------------------------------------------===//
 
-/// Template that represent a int
+/// Template represents a int
 template<int N>
 struct int_ {
     static const int value = N;
@@ -197,7 +197,7 @@ typedef lambda<plus_<_1, _1>> mul2;
 typedef lambda<plus_<_1, int_<10>>> add10;
 
 //===--------------------------------------------------------------------===//
-// test cases
+// Test cases
 //===--------------------------------------------------------------------===//
 TEST(chapter3, lambda) {
     /// test for twice0
