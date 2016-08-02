@@ -12,6 +12,6 @@
 #define TEMPLATECPP_CHAPTER3_HPP
 
 #include "lambda.hpp"
-
+#include "3_0.hpp"
 
 #endif //TEMPLATECPP_CHAPTER3_HPP
