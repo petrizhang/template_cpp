@@ -20,38 +20,40 @@
 #include <boost/type_traits.hpp>
 #include <gtest/gtest.h>
 
+namespace tpp {
 /// main template
 /// T -> T const &
-template<class T>
-struct add_const_ref {
-    typedef T const &type;
-};
+    template<class T>
+    struct add_const_ref {
+        typedef T const &type;
+    };
 
 
 /// template specialization for reference type
 /// T & -> T &
-template<class T>
-struct add_const_ref<T&> {
-    typedef T &type;
-};
+    template<class T>
+    struct add_const_ref<T &> {
+        typedef T &type;
+    };
 
-TEST(chapter2, 2_0) {
-    //===--------------------------------------------------------------------===//
-    // call with type should get type const &
-    //===--------------------------------------------------------------------===//
+    TEST(chapter2, 2_0) {
+        //===--------------------------------------------------------------------===//
+        // call with type should get type const &
+        //===--------------------------------------------------------------------===//
 
-    EXPECT_TRUE((boost::is_same<int const &, typename add_const_ref<int>::type >::value));
-    EXPECT_FALSE((boost::is_same<int, typename add_const_ref<int>::type >::value));
+        EXPECT_TRUE((boost::is_same<int const &, typename add_const_ref<int>::type>::value));
+        EXPECT_FALSE((boost::is_same<int, typename add_const_ref<int>::type>::value));
 
-    //===--------------------------------------------------------------------===//
-    // call with type & should get type &
-    //===--------------------------------------------------------------------===//
-    EXPECT_TRUE((boost::is_same<int &, typename add_const_ref<int&>::type >::value));
+        //===--------------------------------------------------------------------===//
+        // call with type & should get type &
+        //===--------------------------------------------------------------------===//
+        EXPECT_TRUE((boost::is_same<int &, typename add_const_ref<int &>::type>::value));
 
-    //===--------------------------------------------------------------------===//
-    // call with type const & should get type const &
-    //===--------------------------------------------------------------------===//
-    EXPECT_TRUE((boost::is_same<int const&, typename add_const_ref<int const&>::type >::value));
+        //===--------------------------------------------------------------------===//
+        // call with type const & should get type const &
+        //===--------------------------------------------------------------------===//
+        EXPECT_TRUE((boost::is_same<int const &, typename add_const_ref<int const &>::type>::value));
+    }
+
 }
-
 #endif //TEMPLATECPP_2_0_HPP

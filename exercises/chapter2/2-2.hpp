@@ -22,45 +22,47 @@
 #include <boost/type_traits.hpp>
 #include <cassert>
 
+namespace tpp {
 /// cast for pointer type
-template<class Target, class Source>
-inline Target polymorphic_downcast(Source *X) {
-    assert(dynamic_cast<Target>(X) == X);
-    return static_cast<Target>(X);
-};
+    template<class Target, class Source>
+    inline Target polymorphic_downcast(Source *X) {
+        assert(dynamic_cast<Target>(X) == X);
+        return static_cast<Target>(X);
+    };
 
 /// cast for reference type
-template<class Target, class Source>
-inline Target polymorphic_downcast(Source &X) {
+    template<class Target, class Source>
+    inline Target polymorphic_downcast(Source &X) {
 #ifndef NDEBUG
-    dynamic_cast<Target>(X);
+        dynamic_cast<Target>(X);
 #endif
-    return static_cast<Target>(X);
-};
-
-TEST(chapter2, 2_2) {
-    struct Base {
-        virtual ~Base() {};
+        return static_cast<Target>(X);
     };
 
-    struct Derived : Base {
-    };
+    TEST(chapter2, 2_2) {
+        struct Base {
+            virtual ~Base() {};
+        };
 
-    /// cast for Base * -> Derived *
-    Derived d;
-    Base *b_ptr = &d;
-    Derived *d_ptr = polymorphic_downcast<Derived *>(b_ptr);
+        struct Derived : Base {
+        };
 
-    /// cast for Base & -> Derived &
-    Base &b_ref = d;
-    Derived &d_ref = polymorphic_downcast<Derived &>(b_ref);
+        /// cast for Base * -> Derived *
+        Derived d;
+        Base *b_ptr = &d;
+        Derived *d_ptr = polymorphic_downcast<Derived *>(b_ptr);
 
-    /// bad cast for Base & -> Derived &
-    /// which is expected to throw a std::bad_cast error
-    Base b;
-    Base &b_bad_ref = b;
-    EXPECT_THROW((d_ref = polymorphic_downcast<Derived &>(b_bad_ref)),
-                 std::bad_cast);
+        /// cast for Base & -> Derived &
+        Base &b_ref = d;
+        Derived &d_ref = polymorphic_downcast<Derived &>(b_ref);
+
+        /// bad cast for Base & -> Derived &
+        /// which is expected to throw a std::bad_cast error
+        Base b;
+        Base &b_bad_ref = b;
+        EXPECT_THROW((d_ref = polymorphic_downcast<Derived &>(b_bad_ref)),
+                     std::bad_cast);
+    }
+
 }
-
 #endif //TEMPLATECPP_2_2_HPP

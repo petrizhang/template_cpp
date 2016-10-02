@@ -10,7 +10,7 @@
 #ifndef TEMPLATECPP_TEST_HPP
 #define TEMPLATECPP_TEST_HPP
 
-#include "chapter2/chapter2.hpp"
+//#include "chapter2/chapter2.hpp"
 #include "chapter3/chapter3.hpp"
 
 #endif //TEMPLATECPP_TEST_HPP

@@ -22,29 +22,29 @@
 
 #include <gtest/gtest.h>
 #include <boost/static_assert.hpp>
+namespace tpp {
+    template<unsigned N>
+    struct binary {
+        BOOST_STATIC_ASSERT(N % 10 == 1 || N % 10 == 0);
+        static unsigned const value = 2 * binary<N / 10>::value +
+                                      binary<N % 10>::value;
+    };
 
-template<unsigned N>
-struct binary {
-    BOOST_STATIC_ASSERT( N % 10 == 1 || N % 10 == 0);
-    static unsigned const value = 2 * binary<N / 10>::value +
-                                  binary<N % 10>::value;
-};
+    template<>
+    struct binary<0> {
+        static unsigned const value = 0;
+    };
 
-template<>
-struct binary<0> {
-    static unsigned const value = 0;
-};
-
-template<>
-struct binary<1> {
-    static unsigned const value = 1;
-};
+    template<>
+    struct binary<1> {
+        static unsigned const value = 1;
+    };
 
 
-TEST(chapter3, 3_0) {
-    EXPECT_TRUE((binary<0>::value == 0));
-    EXPECT_TRUE((binary<1>::value == 1));
-    EXPECT_TRUE((binary<111>::value == 7));
+    TEST(chapter3, 3_0) {
+        EXPECT_TRUE((binary<0>::value == 0));
+        EXPECT_TRUE((binary<1>::value == 1));
+        EXPECT_TRUE((binary<111>::value == 7));
+    }
 }
-
 #endif //TEMPLATECPP_3_0_HPP
