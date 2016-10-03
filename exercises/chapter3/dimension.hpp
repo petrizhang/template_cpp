@@ -7,9 +7,9 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file uses boost integral constant wrappers to construct a type system.
-//  of different physical quantity
-// in operation process is illegal.
+// This file constructs a type system( use boost integral constant wrappers)
+// to ensure the validity of dimension
+// when process different physical quantity.
 //
 //===----------------------------------------------------------------------===//
 
