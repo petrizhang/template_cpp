@@ -16,4 +16,5 @@
 #include "3_1_2.hpp"
 #include "3_3_4.hpp"
 #include "has_embedded_type.hpp"
+#include "dimension.hpp"
 #endif //TEMPLATECPP_CHAPTER3_HPP
