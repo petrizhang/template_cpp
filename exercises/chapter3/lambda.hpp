@@ -90,7 +90,7 @@ namespace tpp {
 /// such as add_pointer defined below.
     template<template<class> class F, class X>
     struct lambda<F<X> > {
-        template<class A = void_>
+        template<class A>
         struct apply {
             typedef typename F<
                     typename GetArg<X>::template apply<A>::type
@@ -102,7 +102,7 @@ namespace tpp {
 /// Lambda deals with raw template that takes 2 argument.
     template<template<class, class> class F, class X, class Y>
     struct lambda<F<X, Y> > {
-        template<class A1 = void_, class A2 = void_>
+        template<class A1, class A2 = void_>
         struct apply {
             typedef typename F<
                     typename GetArg<X>::template apply<A1, A2>::type,
