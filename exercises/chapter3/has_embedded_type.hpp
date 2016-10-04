@@ -30,7 +30,7 @@ namespace tpp {
         static const bool value = !std::is_void<type>::value;
     };
 
-    /// standart type
+    /// has embedded type
     struct HasMemberTrue0{
         typedef char type;
     };
@@ -49,7 +49,7 @@ namespace tpp {
     struct HasMemberTrue5{
         typedef const volatile char type;
     };
-    /// class has typedef
+    /// doesn't have
     struct HasMemberFalse{
     };
 
