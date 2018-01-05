@@ -1,2 +1,2 @@
 # template_cpp
-Extensive practice of c++ template meta-programming
+Toy codes of c++ template meta-programming
